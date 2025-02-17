@@ -10,6 +10,9 @@ import srt
 
 def load_audio(file: str, sr: int = 16000) -> np.ndarray:
     try:
+
+        # 加载音频文件并将其转换为指定采样率的单声道PCM数据。具体步骤如下：
+        # 设置输出格式为s16le，编码为pcm_s16le，声道数为1，采样率为sr。
         out, _ = (
             ffmpeg.input(file, threads=0)
             .output("-", format="s16le", acodec="pcm_s16le", ac=1, ar=sr)
@@ -18,6 +21,7 @@ def load_audio(file: str, sr: int = 16000) -> np.ndarray:
     except ffmpeg.Error as e:
         raise RuntimeError(f"Failed to load audio: {e.stderr.decode()}") from e
 
+    # 将音频数据从缓冲区转换为NumPy数组，将其展平为一维数组，并将其转换为浮点数类型，最后进行归一化处理。
     return np.frombuffer(out, np.int16).flatten().astype(np.float32) / 32768.0
 
 
