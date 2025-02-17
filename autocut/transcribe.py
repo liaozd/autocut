@@ -65,7 +65,7 @@ class Transcribe:
             self.vad_model, funcs = torch.hub.load(
                 repo_or_dir="snakers4/silero-vad", model="silero_vad", trust_repo=True
             )
-
+            # 降噪和语音分段
             self.detect_speech = funcs[0]
 
         speeches = self.detect_speech(
