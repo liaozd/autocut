@@ -21,6 +21,7 @@ def load_audio(file: str, sr: int = 16000) -> np.ndarray:
     except ffmpeg.Error as e:
         raise RuntimeError(f"Failed to load audio: {e.stderr.decode()}") from e
 
+    # TODO这里需要对长音频分段处理
     # 将音频数据从缓冲区转换为NumPy数组，将其展平为一维数组，并将其转换为浮点数类型，最后进行归一化处理。
     return np.frombuffer(out, np.int16).flatten().astype(np.float32) / 32768.0
 
