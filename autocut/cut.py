@@ -43,30 +43,50 @@ class Merger:
         md.write()
 
     def run(self):
+        """
+        执行视频合并操作。
+
+        本函数根据输入的markdown文件中提取视频任务列表，并将这些视频合并成一个视频文件。
+        """
+        # 获取输入文件名和以指定编码读取markdown文件内容
         md_fn = self.args.inputs[0]
         md = utils.MD(md_fn, self.args.encoding)
+
+        # 检查markdown文件的编辑是否完成
         if not md.done_editing():
             return
 
+        # 初始化视频列表
         videos = []
+        # 遍历markdown文件中的任务
         for m, t in md.tasks():
             if not m:
                 continue
+            # 从任务描述中提取视频文件名
             m = re.findall(r"\[(.*)\]", t)
             if not m:
                 continue
+            # 构造视频文件的完整路径
             fn = os.path.join(os.path.dirname(md_fn), m[0])
+            # 记录视频文件加载信息
             logging.info(f"Loading {fn}")
+            # 将加载的视频文件添加到视频列表中
             videos.append(editor.VideoFileClip(fn))
 
+        # 计算所有视频的总时长
         dur = sum([v.duration for v in videos])
+        # 记录合并后的视频总时长
         logging.info(f"Merging into a video with {dur / 60:.1f} min length")
 
+        # 合并视频剪辑
         merged = editor.concatenate_videoclips(videos)
+        # 构造输出文件名
         fn = os.path.splitext(md_fn)[0] + "_merged.mp4"
+        # 将合并后的视频写入文件
         merged.write_videofile(
             fn, audio_codec="aac", bitrate=self.args.bitrate
         )  # logger=None,
+        # 记录合并视频保存信息
         logging.info(f"Saved merged video to {fn}")
 
 
