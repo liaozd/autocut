@@ -27,8 +27,8 @@ logger.addHandler(file_handler)
 # 日志输出到控制台
 logger.addHandler(ch)
 
-TEST_MEDIA_PATH = "./test/media/"
-TEST_CONTENT_PATH = "./test/content/"
+TEST_MEDIA_PATH = "../test/media/"
+TEST_CONTENT_PATH = "../test/content/"
 TEST_MEDIA_FILE = [
     "test001.mp4",
     "test002.mov",

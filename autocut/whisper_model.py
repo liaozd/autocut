@@ -114,6 +114,14 @@ class WhisperModel(AbstractWhisperModel):
                     initial_prompt=prompt,
                     verbose=False if len(speech_array_indices) == 1 else None,
                 )
+                # 对 audio 分段识别出的文字
+                # {'language': 'zh', 'segments': [
+                #     {'avg_logprob': -0.3002133750915527, 'compression_ratio': 0.8450704225352113, 'end': 4.0, 'id': 0,
+                #      'no_speech_prob': 0.18856346607208252, 'seek': 0, 'start': 0.0, 'temperature': 0.0,
+                #      'text': '我的名字是AutoCart,这是一条用于测试的视频。',
+                #      'tokens': [50364, 14200, 15940, 22381, 1541, 32, 8262, 34, 446, 11, 27455, 2257, 48837, 9254,
+                #                 37732, 11038, 233, 5233, 243, 1546, 40656, 39752, 1543, 50564]}],
+                #  'text': '我的名字是AutoCart,这是一条用于测试的视频。'}
                 r["origin_timestamp"] = seg
                 res.append(r)
         return res
