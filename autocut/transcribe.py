@@ -46,7 +46,19 @@ class Transcribe:
             audio = utils.load_audio(input, sr=self.sampling_rate)
             speech_array_indices = self._detect_voice_activity(audio)
             transcribe_results = self._transcribe(input, audio, speech_array_indices)
-
+            # [{'language': 'zh', 'origin_timestamp': {'end': 75744.0, 'start': 13216.0}, 'segments': [
+            #     {'avg_logprob': -0.298170223236084, 'compression_ratio': 0.8450704225352113, 'end': 4.0, 'id': 0,
+            #      'no_speech_prob': 0.21427297592163086, 'seek': 0, 'start': 0.0, 'temperature': 0.0,
+            #      'text': '我的名字是AutoCart,这是一条用于测试的视频。',
+            #      'tokens': [50364, 14200, 15940, 22381, 1541, 32, 8262, 34, 446, 11, 27455, 2257, 48837, 9254, 37732,
+            #                 11038, 233, 5233, 243, 1546, 40656, 39752, 1543, 50564]}],
+            #   'text': '我的名字是AutoCart,这是一条用于测试的视频。'},
+            #  {'language': 'zh', 'origin_timestamp': {'end': 158176.0, 'start': 94112.0}, 'segments': [
+            #      {'avg_logprob': -0.5026719710406136, 'compression_ratio': 0.9056603773584906, 'end': 4.0, 'id': 0,
+            #       'no_speech_prob': 0.04063568636775017, 'seek': 0, 'start': 0.0, 'temperature': 0.0,
+            #       'text': 'My name is AutoCat. This is a video for testing.',
+            #       'tokens': [50364, 8506, 1315, 307, 13738, 34, 267, 13, 639, 307, 257, 960, 337, 4997, 13, 50564]}],
+            #   'text': 'My name is AutoCat. This is a video for testing.'}]
             output = name + ".srt"
             self._save_srt(output, transcribe_results)
             logging.info(f"Transcribed {input} to {output}")
