@@ -104,7 +104,22 @@ class Transcribe:
         audio: np.ndarray,
         speech_array_indices: List[SPEECH_ARRAY_INDEX],
     ) -> List[Any]:
+        """
+        根据输入的音频数据和相关参数执行语音识别。
+
+        此函数根据不同的语音识别模式调用相应的处理方法，以实现对输入音频的转录。
+        它测量并记录了转录过程所需的时间，并返回转录结果。
+
+        参数:
+        - input: 字符串类型的输入，具体用途取决于语音识别模式。
+        - audio: numpy数组格式的音频数据，用于语音识别。
+        - speech_array_indices: 指定音频数组中语音部分的索引列表。
+
+        返回:
+        - 转录结果的列表，内容取决于所使用的语音识别模式和输入数据。
+        """
         tic = time.time()
+        # 根据不同的whisper_mode，选择不同的transcribe方法进行处理
         res = (
             self.whisper_model.transcribe(
                 audio, speech_array_indices, self.args.lang, self.args.prompt
