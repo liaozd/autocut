@@ -12,7 +12,23 @@ from .type import WhisperMode, SPEECH_ARRAY_INDEX
 
 
 class Transcribe:
+    """
+    语音转录类，用于处理音频文件的转录任务。
+
+    该类根据不同的语音识别模式（Whisper、OpenAI、FasterWhisper）加载相应的模型，
+    并执行音频文件的转录、语音活动检测、结果保存等操作。
+
+    参数:
+    - args: 包含转录任务所需参数的对象，如模型类型、设备、输入文件等。
+    """
+
     def __init__(self, args):
+        """
+        初始化Transcribe类，加载指定的语音识别模型。
+
+        参数:
+        - args: 包含转录任务所需参数的对象。
+        """
         self.args = args
         self.sampling_rate = 16000
         self.whisper_model = None
@@ -37,6 +53,11 @@ class Transcribe:
         logging.info(f"Done Init model in {time.time() - tic:.1f} sec")
 
     def run(self):
+        """
+        执行转录任务，处理所有输入的音频文件。
+
+        该方法遍历所有输入文件，加载音频数据，检测语音活动，执行转录，并保存结果。
+        """
         for input in self.args.inputs:
             logging.info(f"Transcribing {input}")
             name, _ = os.path.splitext(input)
@@ -66,7 +87,15 @@ class Transcribe:
             logging.info(f'Saved texts to {name + ".md"} to mark sentences')
 
     def _detect_voice_activity(self, audio) -> List[SPEECH_ARRAY_INDEX]:
-        """Detect segments that have voice activities"""
+        """
+        检测音频中的语音活动，返回语音片段的起始和结束索引。
+
+        参数:
+        - audio: 输入的音频数据。
+
+        返回:
+        - 包含语音片段起始和结束索引的列表。
+        """
         if self.args.vad == "0":
             return [{"start": 0, "end": len(audio)}]
 
@@ -135,11 +164,26 @@ class Transcribe:
         return res
 
     def _save_srt(self, output, transcribe_results):
+        """
+        将转录结果保存为SRT格式的字幕文件。
+
+        参数:
+        - output: 输出文件的路径。
+        - transcribe_results: 转录结果的列表。
+        """
         subs = self.whisper_model.gen_srt(transcribe_results)
         with open(output, "wb") as f:
             f.write(srt.compose(subs).encode(self.args.encoding, "replace"))
 
     def _save_md(self, md_fn, srt_fn, video_fn):
+        """
+        将转录结果保存为Markdown格式的文件，用于标记句子。
+
+        参数:
+        - md_fn: Markdown文件的路径。
+        - srt_fn: SRT字幕文件的路径。
+        - video_fn: 视频文件的路径。
+        """
         with open(srt_fn, encoding=self.args.encoding) as f:
             subs = srt.parse(f.read())
 
