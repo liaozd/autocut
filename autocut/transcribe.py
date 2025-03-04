@@ -80,7 +80,6 @@ class Transcribe:
             #       'text': 'My name is AutoCat. This is a video for testing.',
             #       'tokens': [50364, 8506, 1315, 307, 13738, 34, 267, 13, 639, 307, 257, 960, 337, 4997, 13, 50564]}],
             #   'text': 'My name is AutoCat. This is a video for testing.'}]
-            output = name + ".srt"
             self._save_srt(output, transcribe_results)
             logging.info(f"Transcribed {input} to {output}")
             self._save_md(name + ".md", output, input)
